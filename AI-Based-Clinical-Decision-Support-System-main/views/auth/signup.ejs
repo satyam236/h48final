@@ -1,0 +1,47 @@
+<%- include('../partials/header', { cssFile: 'auth' }) %>
+
+<div class="auth-container signup-bg">
+    <div class="auth-card glass-effect">
+        <div class="auth-header">
+            <h1 class="gradient-text">🏥 MediCare</h1>
+            <p>Create a new account</p>
+        </div>
+        
+        <form class="auth-form" action="/signup" method="POST">
+            <div class="form-group">
+                <label for="role">Register as</label>
+                <div class="custom-select">
+                    <select id="role" name="role" required>
+                        <option value="Patient">Patient</option>
+                        <option value="Doctor">Doctor</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="John Doe" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" placeholder="john@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+                <span>Create Account</span>
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Already have an account? <a href="/login" class="text-link">Log in</a></p>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

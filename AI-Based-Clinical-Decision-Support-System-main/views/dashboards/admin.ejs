@@ -1,0 +1,14 @@
+<%- include('../partials/header', { cssFile: 'dashboard' }) %>
+
+<div class="dashboard-layout">
+    <%- include('../partials/sidebar', { categories: {}, view: 'main', catCode: null }) %>
+    <main class="main-content">
+        <%- include('../partials/topbar') %>
+        <div class="content-body wrapper-fade-in">
+            <h2>Welcome Admin!</h2>
+            <p>Your dashboard is currently being built in this new framework.</p>
+        </div>
+    </main>
+</div>
+
+<%- include('../partials/footer') %>

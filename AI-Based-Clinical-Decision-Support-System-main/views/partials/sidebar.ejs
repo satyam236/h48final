@@ -1,0 +1,27 @@
+<aside class="sidebar glass-effect">
+    <div class="sidebar-header">
+        <h2 class="gradient-text">🏥 MediCare</h2>
+    </div>
+    
+    <nav class="sidebar-nav">
+        <a href="/dashboard/patient?view=main" class="nav-item <%= view === 'main' ? 'active' : '' %>">
+            <span class="icon">📊</span> Dashboard
+        </a>
+        
+        <div class="nav-section">Categories</div>
+        <% Object.entries(categories).forEach(([key, cat]) => { %>
+            <a href="/dashboard/patient?view=category&category=<%= encodeURIComponent(key) %>" 
+               class="nav-item <%= (typeof catCode !== 'undefined' && catCode === key) ? 'active' : '' %>"
+               title="<%= cat.title %>">
+                <span class="icon"><%= cat.icon %></span>
+                <span class="text"><%= key %></span>
+            </a>
+        <% }) %>
+    </nav>
+    
+    <div class="sidebar-footer">
+        <a href="/login" class="nav-item text-danger">
+            <span class="icon">🚪</span> Logout
+        </a>
+    </div>
+</aside>

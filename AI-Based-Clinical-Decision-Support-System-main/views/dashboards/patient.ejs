@@ -1,0 +1,232 @@
+<%- include('../partials/header', { cssFile: 'dashboard', jsFile: 'app' }) %>
+
+<div class="dashboard-layout">
+    <%- include('../partials/sidebar', { categories: categories, view: view, catCode: catCode }) %>
+
+    <main class="main-content">
+        <%- include('../partials/topbar') %>
+        
+        <div class="content-body wrapper-fade-in">
+            <% if (view === 'main') { %>
+                <div class="welcome-section glass-card">
+                    <div class="welcome-text">
+                        <h2>Welcome back, Sarah!</h2>
+                        <p>Here's an overview of your health dashboard</p>
+                    </div>
+                    <div class="health-score">
+                        <span>Health Score</span>
+                        <h3 class="status-good">💚 Good</h3>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <button class="btn btn-secondary">📅 Book Appointment</button>
+                    <button class="btn btn-secondary">📄 View Reports</button>
+                    <button class="btn btn-secondary">💊 My Prescriptions</button>
+                    <button class="btn btn-secondary">🧪 Lab Results</button>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="categories-list">
+                        <h3>Your Health Categories</h3>
+                        <div class="category-card click-card" onclick="window.location.href='/dashboard/patient?view=category&category=A%20-%20Patient%20Clinical%20Data'">
+                            <div class="cat-info">
+                                <h4>💓 Clinical Records</h4>
+                                <p>View your medical history, diagnoses, and treatment plans</p>
+                                <span class="badge">12 Records</span>
+                            </div>
+                            <div class="cat-arrow">→</div>
+                        </div>
+
+                        <div class="category-card click-card" onclick="window.location.href='/dashboard/patient?view=category&category=B%20-%20Symptom-Disease%20Diagnosis'">
+                            <div class="cat-info">
+                                <h4>🧪 Laboratory</h4>
+                                <p>Access your lab test results and reports</p>
+                                <span class="badge badge-warning">5 Pending</span>
+                            </div>
+                            <div class="cat-arrow">→</div>
+                        </div>
+
+                        <div class="category-card click-card" onclick="window.location.href='/dashboard/patient?view=category&category=D%20-%20Drug%20%26%20Prescription%20Safety'">
+                            <div class="cat-info">
+                                <h4>💊 Pharmacy</h4>
+                                <p>View prescriptions and medication history</p>
+                                <span class="badge">3 Active</span>
+                            </div>
+                            <div class="cat-arrow">→</div>
+                        </div>
+                    </div>
+
+                    <div class="side-panel">
+                        <div class="appointments-widget glass-card">
+                            <div class="widget-header">
+                                <h3>Upcoming Appointments</h3>
+                                <a href="#" class="text-link">View All</a>
+                            </div>
+                            
+                            <div class="appointment-item">
+                                <h4>👨‍⚕️ Dr. Sarah Wilson</h4>
+                                <span class="subtitle">Cardiology</span>
+                                <span class="time">📅 Jan 10, 2026 🕐 10:30 AM</span>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="appointment-item">
+                                <h4>👨‍⚕️ Dr. Michael Chen</h4>
+                                <span class="subtitle">General Medicine</span>
+                                <span class="time">📅 Jan 15, 2026 🕐 2:00 PM</span>
+                            </div>
+
+                            <button class="btn btn-primary w-100 mt-3">Book New Appointment</button>
+                        </div>
+                    </div>
+                </div>
+            <% } else if (view === 'category' && selectedCategory) { %>
+                <div class="category-view wrapper-fade-in">
+                    <div class="category-header glass-card">
+                        <div class="cat-title">
+                            <h1><span class="icon"><%= selectedCategory.icon %></span> <%= selectedCategory.title %></h1>
+                            <p><%= selectedCategory.description %></p>
+                        </div>
+                        <button class="btn btn-secondary">📄 Export Data</button>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card glass-card">
+                            <span class="stat-label">📊 Total Records</span>
+                            <span class="stat-value"><%= selectedCategory.stats.total %></span>
+                        </div>
+                        <div class="stat-card glass-card">
+                            <span class="stat-label">⚠️ Active Alerts</span>
+                            <span class="stat-value text-warning"><%= selectedCategory.stats.alerts %></span>
+                        </div>
+                        <div class="stat-card glass-card">
+                            <span class="stat-label">⚡ Modules</span>
+                            <span class="stat-value"><%= selectedCategory.stats.modules %></span>
+                        </div>
+                    </div>
+
+                    <h2 class="section-title">Modules</h2>
+                    <div class="modules-grid">
+                        <% selectedCategory.modules.forEach(function(mod) { %>
+                            <div class="module-card glass-card click-card" 
+                                 onclick="window.location.href='/dashboard/patient?view=module&category=<%= encodeURIComponent(catCode) %>&module=<%= encodeURIComponent(mod[0]) %>'">
+                                <h3><%= mod[0] %></h3>
+                                <h4><%= mod[1] %></h4>
+                                <p><%= mod[2] %></p>
+                                <div class="module-stats">
+                                    <div class="m-stat">
+                                        <span>Tables</span>
+                                        <strong><%= mod[3] %></strong>
+                                    </div>
+                                    <div class="m-stat">
+                                        <span>Records</span>
+                                        <strong><%= mod[4].toLocaleString() %></strong>
+                                    </div>
+                                </div>
+                                <div class="module-arrow">Explore →</div>
+                            </div>
+                        <% }); %>
+                    </div>
+
+                    <a href="/dashboard/patient?view=main" class="btn btn-secondary mt-4">⬅ Back to Dashboard</a>
+                </div>
+            <% } else if (view === 'module' && selectedModule && selectedCategory) { %>
+                <div class="module-detail-view wrapper-fade-in">
+                    <div class="breadcrumb">
+                        Category <%= catCode.split('-')[0].trim() %> > <%= selectedModule[1] %>
+                    </div>
+                    
+                    <div class="module-header glass-card">
+                        <h1><%= selectedModule[1] %></h1>
+                        <p><%= selectedModule[2] %></p>
+                    </div>
+
+                    <div class="tab-container">
+                        <div class="tabs">
+                            <button class="tab active" onclick="switchTab('home')">🏠 Home</button>
+                            <button class="tab" onclick="switchTab('er_diagram')">🔗 ER Diagram</button>
+                            <button class="tab" onclick="switchTab('tables')">📋 Tables</button>
+                            <button class="tab" onclick="switchTab('sql')">🔍 SQL Query</button>
+                            <button class="tab" onclick="switchTab('triggers')">⚡ Triggers</button>
+                            <button class="tab" onclick="switchTab('output')">📊 Output</button>
+                        </div>
+                        
+                        <div class="tab-content glass-card">
+                            <div id="tab-home" class="tab-pane active fade-in">
+                                <div class="info-alert">
+                                    <strong><%= selectedModule[1] %></strong> - <%= selectedModule[2] %>
+                                </div>
+                                <div class="entities-split">
+                                    <div class="entity-col">
+                                        <h3>Input Entities</h3>
+                                        <div class="entity-item success">1️⃣ Patient Form</div>
+                                        <div class="entity-item success">2️⃣ Insurance Details</div>
+                                        <div class="entity-item success">3️⃣ Emergency Contact</div>
+                                    </div>
+                                    <div class="entity-col">
+                                        <h3>Output Entities</h3>
+                                        <div class="entity-item success">1️⃣ Patient Record</div>
+                                        <div class="entity-item success">2️⃣ Admission Summary</div>
+                                        <div class="entity-item success">3️⃣ Patient ID</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="tab-er_diagram" class="tab-pane">
+                                <h3>Entity Relationship Diagram</h3>
+                                <div class="image-placeholder">
+                                    <img src="https://via.placeholder.com/900x500?text=ER+Diagram+for+<%= selectedModule[0] %>" alt="ER Diagram">
+                                </div>
+                            </div>
+
+                            <div id="tab-tables" class="tab-pane">
+                                <h3>Database Tables</h3>
+                                <table class="data-table">
+                                    <thead><tr><th>Table Name</th><th>Records</th><th>Status</th></tr></thead>
+                                    <tbody>
+                                        <tr><td>patients</td><td>12,500</td><td><span class="badge badge-success">✅ Active</span></td></tr>
+                                        <tr><td>insurance</td><td>8,900</td><td><span class="badge badge-success">✅ Active</span></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div id="tab-sql" class="tab-pane">
+                                <h3>Sample SQL Queries</h3>
+                                <pre><code>-- Query for <%= selectedModule[1] %>
+SELECT p.patient_id, p.name, p.age, i.insurance_type
+FROM patients p
+LEFT JOIN insurance i ON p.id = i.patient_id
+WHERE p.status = 'active'
+ORDER BY p.admission_date DESC
+LIMIT 100;</code></pre>
+                                <button class="btn btn-primary" onclick="alert('Query executed successfully!')">▶️ Execute Query</button>
+                            </div>
+                            
+                            <div id="tab-triggers" class="tab-pane">
+                                <h3>Database Triggers</h3>
+                                <pre><code>CREATE TRIGGER after_patient_insert
+AFTER INSERT ON patients
+FOR EACH ROW
+BEGIN
+  INSERT INTO audit_logs (entity_type, entity_id, action, timestamp)
+  VALUES ('patient', NEW.patient_id, 'INSERT', NOW());
+END;</code></pre>
+                            </div>
+
+                            <div id="tab-output" class="tab-pane">
+                                <h3>Module Output</h3>
+                                <div class="success-alert">✅ Patient Registered Successfully</div>
+                                <div class="info-alert">📋 Patient ID: PT-2024-001234</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="/dashboard/patient?view=category&category=<%= encodeURIComponent(catCode) %>" class="btn btn-secondary mt-4">⬅ Back to Modules</a>
+                </div>
+            <% } %>
+
+        </div>
+    </main>
+</div>
+
+<%- include('../partials/footer') %>
